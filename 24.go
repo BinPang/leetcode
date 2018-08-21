@@ -1,20 +1,15 @@
 package main
 
 func main() {
-	t := &ListNode{
-		Val: 1,
-		Next: &ListNode{
-			Val: 2,
-			Next: &ListNode{
-				Val: 3,
-				Next: &ListNode{
-					Val: 4,
-				},
-			},
-		},
-	}
 	println("1->2->3->4,")
-	printListNode(swapPairs(t))
+	printListNode(swapPairs(_arrayToListNode([]int{1, 2, 3, 4})))
+	println("1->2->3->4->5,")
+	printListNode(swapPairs(_arrayToListNode([]int{1, 2, 3, 4, 5})))
+	println(",")
+	printListNode(swapPairs(nil))
+	println("1,")
+	printListNode(swapPairs(_arrayToListNode([]int{1})))
+
 }
 
 type ListNode struct {
@@ -26,9 +21,11 @@ func swapPairs(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
-	pNow := head
 	newHead := head.Next
+	head.Next = newHead.Next
+	newHead.Next = head
 	pPre := head
+	pNow := head.Next
 	for {
 		if pNow == nil || pNow.Next == nil {
 			break
@@ -36,6 +33,7 @@ func swapPairs(head *ListNode) *ListNode {
 		pPre.Next = pNow.Next
 		pNow.Next = pNow.Next.Next
 		pPre.Next.Next = pNow
+		pPre = pNow
 		pNow = pNow.Next
 
 	}
@@ -53,3 +51,20 @@ func printListNode(l *ListNode) {
 		}
 	}
 }
+
+func _arrayToListNode(a []int) *ListNode {
+	if len(a) == 0 {
+		return nil
+	}
+	head := &ListNode{Val:a[0]}
+	prev := head
+	for i, v := range a{
+		if i==0 {
+			continue
+		}
+		prev.Next = &ListNode{Val:v}
+		prev = prev.Next
+	}
+	return head
+}
+

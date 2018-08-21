@@ -45,6 +45,22 @@ func _arrayToTreeNode(a []interface{}) *TreeNode {
 	return t[0]
 }
 
+func _arrayToListNode(a []int) *ListNode {
+	if len(a) == 0 {
+		return nil
+	}
+	head := &ListNode{Val:a[0]}
+	prev := head
+	for i, v := range a{
+		if i==0 {
+			continue
+		}
+		prev.Next = &ListNode{Val:v}
+		prev = prev.Next
+	}
+	return head
+}
+
 func inOrder(node *TreeNode) {
 	if node == nil {
 		return
