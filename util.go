@@ -81,3 +81,15 @@ func printListNode(l *ListNode) {
 		}
 	}
 }
+
+func _printArrayArray(t [][]int) {
+	for _, v := range t{
+		_printArray(v)
+	}
+}
+func _printArray(t []int)  {
+	for _, v := range t{
+		print(v, ",")
+	}
+	println("")
+}
