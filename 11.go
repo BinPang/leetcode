@@ -1,29 +1,30 @@
 package main
 
+func main() {
+	println("input:[1,1],need:1,result:", maxArea([]int{1,1}))
+	println("input:[1,2],need:1,result:", maxArea([]int{1,2}))
+	println("input:[1,8,6,2,5,4,8,3,7],need:49,result:", maxArea([]int{1,8,6,2,5,4,8,3,7}))
+}
 
-
-//we use max's left and max's right
 func maxArea(height []int) int {
-	if len(height) <2 {
-		panic("must gte 2")
-	}
-	max := 0
-	mc := 0
-	for i, v := range height {
-		if i == 0 {
-			max = v
-			mc = 1
-			continue
+	maxNow := 0
+	start := 0
+	end := len(height)-1
+	tmpArea := 0
+	for {
+		if end-start < 1 {
+			break
 		}
-		if v > max {
-			max = v
-			mc = 1
-		} else if v == max {
-			mc +=1
+		if height[start] <= height[end] {
+			tmpArea = height[start] * (end-start)
+			start +=1
+		} else {
+			tmpArea = height[end] * (end-start)
+			end-=1
+		}
+		if maxNow < tmpArea {
+			maxNow = tmpArea
 		}
 	}
-	if mc >= 2 {
-
-	}
-	return 0
+	return maxNow
 }
