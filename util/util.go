@@ -1,4 +1,4 @@
-package main
+package util
 
 func main() {
 	inOrder(_arrayToTreeNode([]interface{}{3, 1, nil, nil, 2}))
@@ -82,12 +82,12 @@ func printListNode(l *ListNode) {
 	}
 }
 
-func _printArrayArray(t [][]int) {
+func PrintArrayArray(t [][]int) {
 	for _, v := range t{
-		_printArray(v)
+		PrintArray(v)
 	}
 }
-func _printArray(t []int)  {
+func PrintArray(t []int)  {
 	for _, v := range t{
 		print(v, ",")
 	}
