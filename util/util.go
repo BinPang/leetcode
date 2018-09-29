@@ -2,6 +2,7 @@ package main
 
 func main() {
 	inOrder(_arrayToTreeNodeLeetCode([]interface{}{3, 1, nil, nil, 2}))
+	inOrder(_arrayToTreeNodeLeetCode([]interface{}{3, 1, nil, nil, 2}))
 }
 
 type TreeNode struct {
@@ -30,7 +31,6 @@ func _arrayToTreeNodeLeetCode(a []interface{}) *TreeNode {
 		if i >= l {
 			break
 		}
-		println("__", a[i].(int))
 		if len(lastLevel) == 0 {
 			break
 		}
@@ -51,7 +51,7 @@ func _arrayToTreeNodeLeetCode(a []interface{}) *TreeNode {
 		}
 		lastIndex ++
 		i++
-		if lastIndex >= len(lastLevel) {
+		if lastIndex == len(lastLevel)*2 {
 			lastIndex = 0
 			lastLevel = nowLevel
 			nowLevel = make([]*TreeNode, 0)
