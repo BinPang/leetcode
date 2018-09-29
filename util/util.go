@@ -1,7 +1,7 @@
-package util
+package main
 
 func main() {
-	inOrder(_arrayToTreeNode([]interface{}{3, 1, nil, nil, 2}))
+	inOrder(_arrayToTreeNodeLeetCode([]interface{}{3, 1, nil, nil, 2}))
 }
 
 type TreeNode struct {
@@ -12,6 +12,52 @@ type TreeNode struct {
 type ListNode struct {
 	Val  int
 	Next *ListNode
+}
+
+//compatible with leetcode
+func _arrayToTreeNodeLeetCode(a []interface{}) *TreeNode {
+	l := len(a)
+	if l == 0 || a[0] == nil {
+		return nil
+	}
+	r := &TreeNode{Val:a[0].(int)}
+	lastLevel := make([]*TreeNode, 0)//last level *TreeNode
+	lastLevel = append(lastLevel, r)
+	lastIndex := 0
+	nowLevel := make([]*TreeNode, 0)
+	i := 1
+	for {
+		if i >= l {
+			break
+		}
+		println("__", a[i].(int))
+		if len(lastLevel) == 0 {
+			break
+		}
+		if a[i] == nil {
+			if lastIndex%2 == 0 {
+				lastLevel[lastIndex/2].Left = nil
+			} else {
+				lastLevel[lastIndex/2].Right = nil
+			}
+		} else {
+			tmp := &TreeNode{Val:a[i].(int)}
+			nowLevel = append(nowLevel, tmp)
+			if lastIndex%2 == 0 {
+				lastLevel[lastIndex/2].Left = tmp
+			} else {
+				lastLevel[lastIndex/2].Right = tmp
+			}
+		}
+		lastIndex ++
+		i++
+		if lastIndex >= len(lastLevel) {
+			lastIndex = 0
+			lastLevel = nowLevel
+			nowLevel = make([]*TreeNode, 0)
+		}
+	}
+	return r
 }
 
 func _arrayToTreeNode(a []interface{}) *TreeNode {
@@ -49,13 +95,13 @@ func _arrayToListNode(a []int) *ListNode {
 	if len(a) == 0 {
 		return nil
 	}
-	head := &ListNode{Val:a[0]}
+	head := &ListNode{Val: a[0]}
 	prev := head
-	for i, v := range a{
-		if i==0 {
+	for i, v := range a {
+		if i == 0 {
 			continue
 		}
-		prev.Next = &ListNode{Val:v}
+		prev.Next = &ListNode{Val: v}
 		prev = prev.Next
 	}
 	return head
@@ -83,13 +129,20 @@ func printListNode(l *ListNode) {
 }
 
 func PrintArrayArray(t [][]int) {
-	for _, v := range t{
+	for _, v := range t {
 		PrintArray(v)
 	}
 }
-func PrintArray(t []int)  {
-	for _, v := range t{
+func PrintArray(t []int) {
+	for _, v := range t {
 		print(v, ",")
 	}
 	println("")
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
