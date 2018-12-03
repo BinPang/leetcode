@@ -3,89 +3,43 @@ package main
 import "sort"
 
 func main() {
-	t3 := combinationSum([]int{5, 6, 9, 18}, 18)
-	_printArrayArray(t3)
-	println("")
-
 	t0 := combinationSum([]int{2, 3, 6, 7}, 7)
 	_printArrayArray(t0)
-	println("")
-
-	t2 := combinationSum([]int{7, 3}, 17)
-	_printArrayArray(t2)
 	println("")
 
 	t1 := combinationSum([]int{2, 3, 5}, 8)
 	_printArrayArray(t1)
 	println("")
 
+	t3 := combinationSum([]int{5, 6, 9, 18}, 18)
+	_printArrayArray(t3)
+	println("")
+
+	t2 := combinationSum([]int{7, 3}, 17)
+	_printArrayArray(t2)
+	println("")
 }
 
 func combinationSum(candidates []int, target int) [][]int {
 	sort.Ints(candidates)
-	l := len(candidates)
-	stackSum := make([]int, 0)
-	stackPoint := make([]int, 0)
-	p := 0
-	pc := 0
-	loopEmpty := false
-	r := make([][]int, 0)
+	return _combinationSum(candidates, target, 0, len(candidates))
+}
 
-	//breakLoopDebug := 0
-	for {
-		if p == len(stackSum) {
-			stackSum = append(stackSum, 0)
-			stackPoint = append(stackPoint, 0)
-		}
-		if p == 0 {
-			stackSum[p] = candidates[pc]
-			stackPoint[p] = pc
-		} else {
-			stackSum[p] = stackSum[p-1] + candidates[pc]
-			stackPoint[p] = pc
-		}
-		if stackSum[p] >= target {
-			//for j := 0; j <= p; j++ {
-			//	if j == 0 {
-			//		println("j:", j, ",item:", stackSum[j], ",point:", stackPoint[j])
-			//	} else {
-			//		println("j:", j, ",item:", stackSum[j]-stackSum[j-1], ",point:", stackPoint[j])
-			//	}
-			//}
-			if stackSum[p] == target {
-				//got it
-				//println("got it", p)
-				tmp := make([]int, p+1)
-				for j := 0; j <= p; j++ {
-					tmp[j] = candidates[stackPoint[j]]
-				}
-				r = append(r, tmp)
+func _combinationSum(candidates []int, target int, start, end int) [][]int {
+	r := make([][]int, 0)
+	for i := start; i < end; i++ {
+		if candidates[i] >= target {
+			if candidates[i] == target {
+				r = append(r, []int{candidates[i]})
 			}
-			//println("start:p,pc,loopEmpty:", p, pc, loopEmpty)
-			for {
-				p--
-				if p < 0 {
-					p = 0
-					loopEmpty = true
-					break
-				}
-				if stackPoint[p]+1 < l {
-					pc = stackPoint[p] + 1
-					break
-				}
-			}
-			//println("end:p,pc,loopEmpty:", p, pc, loopEmpty)
-			if loopEmpty {
-				break
-			}
-		} else {
-			p++
+			break
 		}
-		//breakLoopDebug ++
-		//if breakLoopDebug > 20 {
-		//	println("debug loop reach 20")
-		//	break
-		//}
+		tmp := _combinationSum(candidates, target-candidates[i], i, end)
+		if len(tmp) > 0 {
+			for _, v := range tmp {
+				r = append(r, append([]int{candidates[i]}, v...))
+			}
+		}
 	}
 	return r
 }

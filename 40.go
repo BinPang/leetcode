@@ -3,15 +3,17 @@ package main
 import "sort"
 
 func main() {
+	t6 := combinationSum2([]int{10, 1, 2, 7, 6, 1, 5}, 8)
+	_printArrayArray(t6)
+	println("")
+
 	t5 := combinationSum2([]int{1, 2, 3}, 6)
 	_printArrayArray(t5)
 	println("")
-	return
 
 	t4 := combinationSum2([]int{1, 1, 3, 3, 4, 4}, 10)
 	_printArrayArray(t4)
 	println("")
-	return
 
 	t3 := combinationSum2([]int{1, 1, 1, 1, 1}, 9)
 	_printArrayArray(t3)
@@ -31,34 +33,44 @@ func main() {
 	println("")
 }
 
+//1 1 2 5 6 7 10@TODO stupid method, this method is coding by human's activity
+// @TODO hard to coding. use backtracking
+/**
+1 1 2 5 no
+1 1 5 6 no
+1 1 6 yes
+1 2 5 yes
+1 5 6 no
+1 6 7 no
+1 7 yes
+2 5 6 no
+2 6 yes
+5 6 no
+6 7 no
+7 10 no
+10 no
+ */
 func combinationSum2(candidates []int, target int) [][]int {
 	sort.Ints(candidates)
-
-	return _combinationSum2(candidates, 0, len(candidates), target)
+	return _combinationSum2(candidates, target, 0, len(candidates))
 }
 
-func _combinationSum2(candidates []int, start, l, target int) [][]int {
-	println(start, l, target)
-	if start >= l {
-		return nil
-	}
-	if target <= 0 {
-		return nil
-	}
-	if candidates[start] > target {
-		return nil
-	} else if candidates[start] == target {
-		return [][]int{{target}}
-	}
-	sum := 0
+func _combinationSum2(candidates []int, target int, start, end int) [][]int {
 	r := make([][]int, 0)
-	for i := start+1; i < l; i++ {
-		sum += candidates[i]
-		tmp := _combinationSum2(candidates, i, l, target-sum)
-		println(i+1, target-sum)
-		if tmp != nil {
-			for _, v1 := range tmp {
-				r = append(r, append([]int{candidates[i]}, v1...))
+	for i := start; i < end; i++ {
+		if i != start && candidates[i] == candidates[i-1] {
+			continue
+		}
+		if candidates[i] >= target {
+			if candidates[i] == target {
+				r = append(r, []int{candidates[i]})
+			}
+			break
+		}
+		tmp := _combinationSum2(candidates, target-candidates[i], i+1, end)
+		if len(tmp) > 0 {
+			for _, v := range tmp {
+				r = append(r, append([]int{candidates[i]}, v...))
 			}
 		}
 	}
