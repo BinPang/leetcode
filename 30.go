@@ -1,5 +1,6 @@
 package main
 
+//Your runtime beats 41.89 % of golang submissions.
 func main() {
 	ts := findSubstring("barfoothefoobarman", []string{"foo", "bar"})
 	println(len(ts))
@@ -21,8 +22,8 @@ func findSubstring(s string, words []string) []int {
 		return nil
 	}
 	r := make([]int, 0)
-	hash := make(map[string]int, lw)
-	low := len(words[0]) //len one words
+	hash := make(map[string]int)
+	low := len(words[0]) //len one word
 	lw1 := lw * low
 	for _, v := range words {
 		if len(v) != low {
@@ -37,13 +38,14 @@ func findSubstring(s string, words []string) []int {
 	ii := l - lw*len(words[0])
 	j := 0
 	for i := 0; i <= ii; i++ {
-		if _, ok := hash[sArray[i]]; ok {
+		if hash[sArray[i]] > 0 {
+			tmp := make(map[string]int)
 			for j = 0; j < lw1; j += low {
-				if v, ok := hash[sArray[i+j]]; ok {
-					if v > 0 {
-						hash[sArray[i+j]] -= 1
-					} else {
+				if hash[sArray[i+j]] > 0 {
+					if tmp[sArray[i+j]] == hash[sArray[i+j]] {
 						break
+					} else {
+						tmp[sArray[i+j]] += 1
 					}
 				} else {
 					break
@@ -55,9 +57,6 @@ func findSubstring(s string, words []string) []int {
 				r = append(r, i)
 			}
 			//println("start:", s, i, j, lw1)
-			for tmp := 0; tmp < j; tmp += low {
-				hash[sArray[i+tmp]] += 1
-			}
 		}
 	}
 	return r
