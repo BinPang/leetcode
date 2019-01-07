@@ -1,10 +1,11 @@
 package main
 
 func twoSum(nums []int, target int) []int {
-	tmp := map[int]int{}
+	//tmp := map[int]int{}
+	tmp := make(map[int]int, len(nums))
 	for key, value := range nums {
-		if exist, ok := tmp[target-value]; ok {
-			return []int{key, exist}
+		if location, ok := tmp[target-value]; ok {
+			return []int{location, key}
 		}
 		tmp[value] = key
 	}

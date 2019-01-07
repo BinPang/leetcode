@@ -3,52 +3,36 @@ package main
 import "strconv"
 
 func main() {
-	println(getPermutation(8, 678))
-	return
-	println(getPermutation(4, 10))
 	println(getPermutation(4, 9))
+	println(getPermutation(4, 8))
+	println(getPermutation(8, 678))
+	println(getPermutation(4, 10))
 	println(getPermutation(4, 24))
 }
 
 func getPermutation(n int, k int) string {
 	//Given n will be between 1 and 9 inclusive.
-	r := 0
-	tmp := make([]int, n+1)
-	got := map[int]bool{}
-	tmp[0] = 0
-	tmp[1] = 1
-	for i := 2; i <= n; i++ {
-		tmp[i] = i * tmp[i-1]
-		println("start:", i, tmp[i])
+	r := make([]int, 0)
+	per := make([]int, n)
+	num := make([]int, n)
+	per[0] = 1
+	num[0] = 1
+	for i := 1; i < n; i++ {
+		per[i] = (i+1) * per[i-1]
+		num[i] = i + 1
 	}
-	t0 := 0
-	t1 := 0
-	for i := n; i > 1; i-- {
-		t0 = k / tmp[i-1] //商
-		t1 = k % tmp[i-1] //余数
-		//println(t0, t1)
-		if t1 == 0 {
-			t0 -= 1
-			t1 = tmp[i-1]
-		}
-		//println(t0, t1)
-		t0+=1
-		for j := 1; j <= t0; j++ {
-			if got[j] {
-				t0 += 1
-			}
-		}
-		got[t0-1] = true
-		t0++
-		r = r*10 + t0
-		k = t1
-		println("___", r, k, tmp[i-1], t0, t1)
+	k--//start from 1 to zero
+	for i := n-1; i > 0; i-- {
+		loc := k / per[i-1]
+		r = append(r, num[loc])
+		k = k - loc*per[i-1]
+		num = append(num[0:loc], num[loc+1:]...)
 	}
+	r = append(r, num[0])
+	r0 := 0
 	for i := 0; i < n; i++ {
-		if !got[i] {
-			r = r*10 + (i + 1)
-			break
-		}
+		r0 = r0 * 10 + r[i]
 	}
-	return strconv.Itoa(r)
+
+	return strconv.Itoa(r0)
 }
