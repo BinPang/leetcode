@@ -8,15 +8,34 @@ func main() {
 }
 
 func ladderLength(beginWord string, endWord string, wordList []string) int {
-	l := len(wordList)
-	visited := make([]string, l+1)
-	visited[0] = beginWord
-	pVisited := 1
-	lw := len(beginWord)
+	l0 := len(wordList)
+	mw := make(map[string]int, l0)
+	for _, v := range wordList{
+		mw[v] = l0+1
+	}
 
-	hashWordList := make(map[string]bool, l)
-	hashVisited := make(map[string]bool, l)
-	
+	l1 := len(beginWord)
+	work := []string{beginWord}
+	i:=0
+	var j byte
+	for {
+		if len(work) == 0 {
+			break
+		}
+		tmpWord := []byte(work[0])
+		work = work[1:]
+		for i = 0; i < l1; i++ {
+			tmpChar := tmpWord[i]
+			for j = 'a'; j <= 'z'; j++ {
+				tmpWord[i] = j
+				if mw[string(tmpWord)] != 0 {
+					work = append(work, string(tmpWord))
+				}
+			}
+			tmpWord[i] = tmpChar
+		}
+	}
+
 
 	return 0
 }
