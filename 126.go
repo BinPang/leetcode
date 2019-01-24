@@ -10,7 +10,7 @@ func main() {
 	println(ladderLength(beginWord, endWord, wordList))
 }
 
-func ladderLength(beginWord string, endWord string, wordList []string) int {
+func findLadders(beginWord string, endWord string, wordList []string) [][]string {
 	l0 := len(wordList)
 	mw := make(map[string]int, l0)
 	for _, v := range wordList {
@@ -54,3 +54,4 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
 
 	return 0
 }
+
