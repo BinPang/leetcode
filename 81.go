@@ -1,14 +1,17 @@
 package main
 
 func main() {
-	println("true:", search([]int{3,1,2,2,2}, 1))
-	return
+	println("false", search([]int{1, 3}, 2))
+	println("false", search([]int{2, 5, 6, 0, 0, 1, 2}, 3))
+	println("true:", search([]int{15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14}, 25))
+	println("true:", search([]int{4, 5, 6, 7, 0, 1, 2}, 0))
+	println("true:", search([]int{0, 1, 1, 2, 0, 0}, 2))
+	println("true:", search([]int{0, 0, 1, 1, 2, 0}, 2))
+	println("true:", search([]int{3, 1, 2, 2, 2}, 1))
 	println("true:", search([]int{1, 2, 2, 2, 0, 1, 1}, 0))
 	println("true:", search([]int{4, 5, 6, 7, 0, 1, 2}, 0))
-	//return
 	println("true:", search([]int{1, 3, 1, 1, 1}, 3))
 	println("true", search([]int{2, 5, 6, 0, 0, 1, 2}, 2))
-	println("true", search([]int{0, 0, 1, 1, 2, 0}, 2))
 	println("true", search([]int{1, 1, 3}, 3))
 	println("false", search([]int{1}, 0))
 	println("true", search([]int{1, 1, 1, 1, 1}, 1))
@@ -16,7 +19,6 @@ func main() {
 	println("false", search([]int{1, 1}, 0))
 	println("true", search([]int{2, 5, 6, 0, 0, 1, 2}, 2))
 	println("true", search([]int{2, 5, 6, 0, 0, 1, 1}, 2))
-	println("false", search([]int{2, 5, 6, 0, 0, 1, 2}, 3))
 }
 
 func search(nums []int, target int) bool {
@@ -27,41 +29,43 @@ func search(nums []int, target int) bool {
 	start := 0
 	end := l - 1
 	middle := 0
+	//println(fmt.Sprintf("%+v,%d", nums, target))
 	for {
-		println(start, end, (start+end)/2)
 		middle = (start + end) / 2
-		if start > end {
+		//println(start, end, middle)
+		if start > l-1 || end < 0 || start > end {
 			return false
 		}
 		if nums[start] == target || nums[end] == target || nums[middle] == target {
 			return true
 		}
 		if nums[start] == nums[end] {
-			if nums[middle] == nums[start] {
-				start++
-				end--
+			start++
+			end--
+			continue
+		}
+		if start < l-1 && nums[start] == nums[start+1] {
+			start++
+			continue
+		}
+		if end > 0 && nums[end] == nums[end-1] {
+			end--
+			continue
+		}
+		if start+1 >= end {
+			return false
+		}
+		if nums[middle] > nums[start] {
+			if target < nums[middle] && target > nums[start] {
+				end = middle
 			} else {
-				if target > nums[middle] {
-					start = middle + 1
-				} else {
-					if nums[start] < target {
-						end = middle - 1
-					} else {
-						start = middle + 1
-					}
-				}
+				start = middle
 			}
 		} else {
-			//3,1,2,2,2
-			//1
-			if target > nums[middle] {
-				start = middle + 1
+			if target > nums[middle] && target < nums[end] {
+				start = middle
 			} else {
-				if nums[start] < target {
-					end = middle - 1
-				} else {
-					start = middle + 1
-				}
+				end = middle
 			}
 		}
 	}
