@@ -6,7 +6,9 @@ type ListNode struct {
 }
 
 func main() {
+	//printListNode(partition(_arrayToListNode([]int{4, 2, 4, 3, 2, 5, 2}), 3))
 	printListNode(partition(_arrayToListNode([]int{1, 4, 3, 2, 5, 2}), 3))
+	return
 	printListNode(partition(_arrayToListNode([]int{1, 4, 3, 2, 5, 2}), 6))
 	printListNode(partition(_arrayToListNode([]int{1, 4, 3, 2, 5, 2}), 0))
 	printListNode(partition(_arrayToListNode([]int{1, 1, 3, 2, 5, 2}), 1))
@@ -18,40 +20,15 @@ func partition(head *ListNode, x int) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
-	fakerHead := &ListNode{Next: head}
-	start := head
-	run := head.Next
-	prev := head
+	fakeHead := &ListNode{Next: head}
+	//find the first gt x item
+	prev := fakeHead
+	doing := head
+	firstSmall := false//check firs is small item
 	for {
-		if run == nil {
-			break
-		}
-		if run.Val >= x {
-			break
-		} else {
-			start = start.Next
-			run = run.Next
-			prev = prev.Next
-		}
-	}
-	for {
-		if run == nil {
-			break
-		}
-		println(start, start.Val, run, run.Val, prev, prev.Val)
-		if run.Val >= x {
-			run = run.Next
-			prev = prev.Next
-		} else {
-			prev.Next = run.Next
-			run.Next = start.Next
-			start.Next = run
 
-			run = run.Next
-		}
 	}
-
-	return fakerHead.Next
+	return fakeHead.Next
 }
 
 func _arrayToListNode(a []int) *ListNode {

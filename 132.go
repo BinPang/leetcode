@@ -1,25 +1,37 @@
 package main
 
+//import "fmt"
+
 func main() {
-	println(minCut("aab"))
+	println(minCut("aaaab"))
 	println(minCut("aabbaaaa"))
 }
 
 func minCut(s string) int {
-	r := len(s) - 1
-	for i := 0; i < len(s); i++ {
-		s1 := s[:i+1]
-		if palindrome(s1) {
-			if s1 == s {
-				return 0
-			}
-			tmp := minCut(s[i+1:])
-			if tmp+1 < r {
-				r = tmp + 1
+	l := len(s)
+	if l == 0 {
+		return 0
+	}
+	dp := make([][]int, l)
+	for i := 0; i < l; i++ {
+		dp[i] = make([]int, l)
+	}
+
+	start := 0
+	length := 0
+	for {
+		for {
+			if palindrome(s[start : start+length]) {
+				dp[start][start+length] = 0
+			} else {
+				
 			}
 		}
+		length++
+		start = 0
 	}
-	return r
+
+	return 0
 }
 
 func palindrome(s1 string) bool {
