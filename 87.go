@@ -1,28 +1,43 @@
 package main
 
-import "strings"
-
 func main() {
-	println(isScramble("aa", "ba"))
-	return
-	println(isScramble("aa", "ab"))
-	return
-	println(isScramble("great", "rgeat"))
-	println(isScramble("abcde", "caebd"))
+	println("true => ", isScramble("abcd", "cdab"))
+	println("true => ", isScramble("abc", "cab"))
+	println("false => ",isScramble("aa", "ba"))
+	println("false => ",isScramble("aa", "ab"))
+	println("true => ", isScramble("great", "rgeat"))
+	println("false => ",isScramble("abcde", "caebd"))
 }
 
 func isScramble(s1 string, s2 string) bool {
+	//println(s1, s2)
 	if s1 == s2 {
 		return true
 	}
-	index := strings.Index(s2, string(s1[0]))
-	//println(s1, s2, index)
-	if index == -1 {
+	l := len(s1)
+	if l != len(s2) {
 		return false
 	}
-	if index == 0 {
-		return isScramble(s1[index+1:], s2[index+1:])
-	} else {
-		return isScramble(s1[1:index], s2[:index-1]) && isScramble(s1[index+1:], s2[index+1:])
+	tmp := make([]int, 26)
+	for i := range s1 {
+		tmp[s1[i]-'a'] ++
+		tmp[s2[i]-'a'] --
 	}
+	for _, v := range tmp {
+		if v != 0 {
+			return false
+		}
+	}
+
+	for i := 1; i < l; i++ {
+		//println(i, s1, s2, "__:", s1[0:i], s2[0:i], s1[i:], s2[i:])
+		if isScramble(s1[0:i], s2[0:i]) && isScramble(s1[i:], s2[i:]) {
+			return true
+		}
+		//println(i, s1, s2, "++:", s1[0:i], s2[l-i:], s1[i:], s2[0:l-i])
+		if isScramble(s1[0:i], s2[l-i:]) && isScramble(s1[i:], s2[0:l-i]) {
+			return true
+		}
+	}
+	return false
 }

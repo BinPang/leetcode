@@ -12,23 +12,18 @@ func minCut(s string) int {
 	if l == 0 {
 		return 0
 	}
-	dp := make([][]int, l)
+	dp := make([][l]bool, l)
 	for i := 0; i < l; i++ {
-		dp[i] = make([]int, l)
+		dp[i][i] = true
 	}
+	min := make([]int, l)
+	min[0] = 0
 
-	start := 0
-	length := 0
-	for {
-		for {
-			if palindrome(s[start : start+length]) {
-				dp[start][start+length] = 0
-			} else {
-				
-			}
+	for i := 1; i < l; i++ {
+		min[i] = min[i-1] + 1
+		for j := 0; j < i; j++ {
+
 		}
-		length++
-		start = 0
 	}
 
 	return 0
