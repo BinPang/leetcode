@@ -16,6 +16,7 @@ You may assume k is always valid, 1 ≤ k ≤ array's length.
  */
 
 func main() {
+	println(findKthLargest([]int{5, 2, 4, 1, 3, 6, 0}, 4))
 	println(findKthLargest([]int{3, 2, 3, 1, 2, 4, 5, 5, 6}, 2))
 	println(findKthLargest([]int{3, 2, 3, 1, 2, 4, 5, 5, 6}, 3))
 	println(findKthLargest([]int{3, 2, 3, 1, 2, 4, 5, 5, 6}, 4))
@@ -28,14 +29,14 @@ func main() {
 func findKthLargest(nums []int, k int) int {
 	heap := make([]int, k)
 	l := len(nums)
-	i, j := 0, 0
+	i, j, parent := 0, 0, 0
 	left, right := 0, 0
 	for i = 0; i < k; i++ {
 		j = i
 		heap[j] = nums[j]
 		for {
-			parent := (j - 1) % 2
-			if parent < 0 {
+			parent = (j - 1) / 2
+			if parent < 0 || (parent == 0 && j == 0) {
 				break
 			}
 			if heap[parent] > heap[j] {
@@ -44,11 +45,11 @@ func findKthLargest(nums []int, k int) int {
 			j = parent
 		}
 	}
-	for i := k; i < l; i++ {
+	for i = k; i < l; i++ {
 		if nums[i] < heap[0] {
 			continue
 		}
-		j := 0
+		j = 0
 		heap[j] = nums[i]
 		for {
 			left = j*2 + 1
