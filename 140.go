@@ -6,77 +6,65 @@ import (
 )
 
 func main() {
+	r0 := wordBreak("a", []string{"a"})
+	println(strings.Join(r0, "\n"))
+
+	r10 := wordBreak("aaaa", []string{"a", "aa"})
+	println(strings.Join(r10, "\n"))
+
 	r1 := wordBreak("catsanddog", []string{"cat", "cats", "and", "sand", "dog"})
 	println(strings.Join(r1, "\n"))
 
 	r2 := wordBreak("pineapplepenapple", []string{"apple", "pen", "applepen", "pine", "pineapple"})
 	println(strings.Join(r2, "\n"))
 
-	r3:= wordBreak("catsandog", []string{"cats", "dog", "sand", "and", "cat"})
+	r3 := wordBreak("catsandog", []string{"cats", "dog", "sand", "and", "cat"})
 	println(strings.Join(r3, "\n"))
 }
 
 func wordBreak(s string, wordDict []string) []string {
-	r := make([]string, 0)
 	l := len(s)
-	dp := make([]bool, l+1)
-	dp[0] = true
-
-	stack1 := make([]int, l)
-	stack2 := make([]int, l)
-	pstack := 0 //just a stack
-
+	dp := make([][]int, l+1)
+	for e := range dp {
+		dp[e] = make([]int, 0)
+	}
 	wordMap := make(map[string]bool, len(wordDict))
-	maxLen := 0
 	for _, v := range wordDict {
 		wordMap[v] = true
-		if len(v) > maxLen {
-			maxLen = len(v) //here to reduce time
+	}
+	dp[0] = []int{0}
+
+	for i := 1; i <= l; i++ {
+		for j := 0; j < i; j++ {
+			if len(dp[j]) > 0 && wordMap[s[j:i]] {
+				dp[i] = append(dp[i], j)
+			}
 		}
 	}
+	//println(fmt.Sprintf("%+v", dp))
 
-	start := 0
-	end := 1
-	for {
-		//println(l, start, end)
-		if end == l {
-			//maybe find or not
-			if wordMap[s[start:end]] {
-				//find
-				//println(fmt.Sprintf("%+v,%+v", stack1, stack2))
-				oneR := ""
-				for i := 0; i < pstack; i++ {
-					oneR += s[stack1[i]:stack2[i]+1] + " "
+	return dfs(s, &dp, l)
+}
+
+func dfs(s string, dp *[][]int, start int) []string {
+	r := make([]string, 0)
+	for _, v := range (*dp)[start] {
+		if v == 0 {
+			if start+1 == len(*dp) {
+				r = append(r, s[v:start])
+			} else {
+				r = append(r, s[v:start]+" ")
+			}
+		} else {
+			tmp := dfs(s, dp, v)
+			for _, v2 := range tmp {
+				if start+1 == len(*dp) {
+					r = append(r, v2+s[v:start])
+				} else {
+					r = append(r, v2+s[v:start]+" ")
 				}
-				oneR += s[start:end]
-				r = append(r, oneR)
 			}
-			if pstack == 0 {
-				break
-			}
-			pstack--
-			start = stack1[pstack]
-			end = stack2[pstack] + 2
-			continue
-		}
-		if wordMap[s[start:end]] {
-			stack1[pstack] = start
-			stack2[pstack] = end - 1
-			pstack++
-			start = end
-			end += 1
-			continue
-		}
-		end += 1
-		if end - start > maxLen {
-			if pstack == 0 {
-				break
-			}
-			pstack--
-			start = stack1[pstack]
-			end = stack2[pstack] + 2
 		}
 	}
-
 	return r
 }
