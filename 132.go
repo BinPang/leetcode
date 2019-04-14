@@ -3,43 +3,37 @@ package main
 //import "fmt"
 
 func main() {
+	println(minCut("leet"))
 	println(minCut("aaaab"))
 	println(minCut("aabbaaaa"))
 }
 
+//some one is clever
 func minCut(s string) int {
 	l := len(s)
-	if l == 0 {
-		return 0
-	}
-	dp := make([][l]bool, l)
+	dp := make([][]bool, l)
 	for i := 0; i < l; i++ {
-		dp[i][i] = true
+		dp[i] = make([]bool, l)
 	}
-	min := make([]int, l)
-	min[0] = 0
+	cut := make([]int, l)
+	min := 0
 
-	for i := 1; i < l; i++ {
-		min[i] = min[i-1] + 1
-		for j := 0; j < i; j++ {
-
+	for i := 0; i < l; i++ {
+		min = i
+		for j := 0; j <= i; j++ {
+			if s[j] == s[i] && (j+1 > i-1 || dp[j+1][i-1]) {
+				dp[j][i] = true
+				if j == 0 {
+					min = 0
+				} else {
+					if min > cut[j-1]+1 {
+						min = cut[j-1] + 1
+					}
+				}
+			}
 		}
+		cut[i] = min
 	}
 
-	return 0
-}
-
-func palindrome(s1 string) bool {
-	start := 0
-	end := len(s1) - 1
-	for {
-		if start > end {
-			return true
-		}
-		if s1[start] != s1[end] {
-			return false
-		}
-		start++
-		end--
-	}
+	return cut[l-1]
 }

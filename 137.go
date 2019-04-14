@@ -1,14 +1,14 @@
 package main
 
+//maybe math trick
+//toooooooooooooooo difficult for me to solve, give up. just copy from discuss
 func singleNumber(nums []int) int {
-	r := 0
-	for i, v := range nums{
-		if i == 0 {
-			r = v
-		} else {
+	ones := 0
+	twos := 0
 
-		}
-
+	for i := 0; i < len(nums); i++ {
+		ones = (ones ^ nums[i]) & ^twos
+		twos = (twos ^ nums[i]) & ^ones
 	}
-	return r
+	return ones
 }
