@@ -1,59 +1,107 @@
 package main
 
-type Point struct {
-	X int
-	Y int
-}
+import "fmt"
 
 func main() {
-	maxPoints([]Point{
-		{X:1,Y:1},
-		{X:3,Y:2},
-		{X:5,Y:3},
-		{X:4,Y:1},
-		{X:2,Y:3},
-		{X:1,Y:4},
-	})
+	println(maxPoints([][]int{
+		{0, 0},
+		{1, 1},
+		{0, 0},
+	}))
+
+	println(maxPoints([][]int{
+		{1, 1},
+		{3, 2},
+		{5, 3},
+		{4, 1},
+		{2, 3},
+		{1, 4},
+	}))
 }
 
-func maxPoints(points []Point) int {
+func maxPoints(points [][]int) int {
 	l := len(points)
-	column := map[int]int{}
-	row := map[int]int{}
-	normal := map[int]map[int]map[int]int{}
+	if l == 0 {
+		return 0
+	}
+	dup := make(map[int]map[int]int, 0)
+	for _, v := range points {
+		if dup[v[0]] == nil {
+			dup[v[0]] = make(map[int]int, 0)
+		}
+		dup[v[0]][v[1]] += 1
+	}
+	column := make(map[int]int, 0)
+	row := make(map[int]int, 0)
+	normal := make(map[int]map[int]map[int]map[int]int, 0)
+	r := 0
 	var x, y, gcd int
-	var x1, y1 int
+	var a, b int
 	for i := 0; i < l; i++ {
 		for j := i + 1; j < l; j++ {
-			if points[i].X == points[j].X {
-				column[points[i].X] += 1
-			} else if points[i].Y == points[j].Y{
-				row[points[i].Y] += 1
+			if points[i][0] == points[j][0] && points[i][1] == points[j][1] {
+				column[points[i][0]] += 1
+				if r < column[points[i][0]] {
+					r = column[points[i][0]]
+				}
+				row[points[i][1]] += 1
+				if r < row[points[i][1]] {
+					r = row[points[i][1]]
+				}
+			} else if points[i][0] == points[j][0] {
+				column[points[i][0]] += 1
+				if r < column[points[i][0]] {
+					r = column[points[i][0]]
+				}
+			} else if points[i][1] == points[j][1] {
+				row[points[i][1]] += 1
+				if r < row[points[i][1]] {
+					r = row[points[i][1]]
+				}
 			} else {
-				x = points[i].X - points[j].X
-				y = points[i].Y - points[j].Y
-				if x < 0 && y < 0 {
-					x = -x
-					y = -y
-				} else if x > 0 && y < 0 {
+				x = points[i][0] - points[j][0]
+				y = points[i][1] - points[j][1]
+				if x < 0 {
 					x = -x
 					y = -y
 				}
 				gcd = GCD(x, y)
-				x1 = x%gcd
-				y1 = y%gcd
-				if normal[x1] == nil {
-					normal[x1] = map[int]map[int]int{}
+				//slope = y/x
+				x = x / gcd
+				y = y / gcd
+				if normal[y] == nil {
+					normal[y] = make(map[int]map[int]map[int]int)
 				}
-				if normal[x1][y1] == nil {
-					normal[x1][y1] = map[int]int{}
+				if normal[y][x] == nil {
+					normal[y][x] = make(map[int]map[int]int)
 				}
-				println(x, y, gcd)
+				//y = ax+b;==>
+				a = points[j][1]*(points[j][0]-points[i][0]) - points[j][0]*(points[j][1]-points[i][1])
+				b = points[j][0] - points[i][0]
+				if a == 0 {
+					b = 0
+				} else {
+					if a < 0 {
+						a = -a
+						b = -b
+					}
+					gcd = GCD(a, b)
+					a = a / gcd
+					b = b / gcd
+				}
+				if normal[y][x][a] == nil {
+					normal[y][x][a] = make(map[int]int)
+				}
+				normal[y][x][a][b] += 1
+				if r < normal[y][x][a][b] {
+					r = normal[y][x][a][b]
+				}
+				println(fmt.Sprintf("%+v, %+v ,%d,%d,%d,%d", points[i], points[j], x/y, a, b, r))
 			}
 		}
 	}
-
-	return 0
+	//println(fmt.Sprintf("%+v, %+v, %+v", column, row, normal))
+	return r + 1
 }
 
 func GCD(a int, b int) int {
