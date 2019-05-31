@@ -1,8 +1,12 @@
 package main
 
-import "fmt"
-
 func main() {
+	println(maxPoints([][]int{
+		{3, 1},
+		{12, 3},
+		{3, 1},
+		{-6, -1},
+	}))
 	println(maxPoints([][]int{
 		{0, 0},
 		{1, 1},
@@ -23,85 +27,76 @@ func maxPoints(points [][]int) int {
 	l := len(points)
 	if l == 0 {
 		return 0
+	} else if l == 1 {
+		return 1
 	}
-	dup := make(map[int]map[int]int, 0)
-	for _, v := range points {
-		if dup[v[0]] == nil {
-			dup[v[0]] = make(map[int]int, 0)
-		}
-		dup[v[0]][v[1]] += 1
-	}
-	column := make(map[int]int, 0)
-	row := make(map[int]int, 0)
-	normal := make(map[int]map[int]map[int]map[int]int, 0)
 	r := 0
-	var x, y, gcd int
-	var a, b int
+
+	var t, s int
+	var u, v int
+	var same, vertical, horizontal, lineMax int
+	var gcd int
+	tmp := map[int]map[int]map[int]map[int]int{}
 	for i := 0; i < l; i++ {
+		same = 0
+		vertical = 0
+		horizontal = 0
+		lineMax = 0
+		tmp = map[int]map[int]map[int]map[int]int{}
 		for j := i + 1; j < l; j++ {
-			if points[i][0] == points[j][0] && points[i][1] == points[j][1] {
-				column[points[i][0]] += 1
-				if r < column[points[i][0]] {
-					r = column[points[i][0]]
-				}
-				row[points[i][1]] += 1
-				if r < row[points[i][1]] {
-					r = row[points[i][1]]
-				}
-			} else if points[i][0] == points[j][0] {
-				column[points[i][0]] += 1
-				if r < column[points[i][0]] {
-					r = column[points[i][0]]
-				}
-			} else if points[i][1] == points[j][1] {
-				row[points[i][1]] += 1
-				if r < row[points[i][1]] {
-					r = row[points[i][1]]
-				}
+			t = points[j][1] - points[i][1]
+			s = points[j][0] - points[i][0]
+			if t == 0 && s == 0 {
+				same++
+				continue
+			} else if t == 0 {
+				vertical++
+				continue
+			} else if s == 0 {
+				horizontal++
+				continue
+			}
+			if t < 0 {
+				t = -t
+				s = -s
+			}
+			gcd = GCD(t, s)
+			t = t / gcd
+			s = s / gcd
+			//
+			u = s*points[j][1] - t*points[j][0]
+			v = s
+			if u == 0 {
+				s = 0
 			} else {
-				x = points[i][0] - points[j][0]
-				y = points[i][1] - points[j][1]
-				if x < 0 {
-					x = -x
-					y = -y
+				gcd = GCD(u, v)
+				u = u / gcd
+				v = v / gcd
+				if u < 0 {
+					u = -u
+					v = -v
 				}
-				gcd = GCD(x, y)
-				//slope = y/x
-				x = x / gcd
-				y = y / gcd
-				if normal[y] == nil {
-					normal[y] = make(map[int]map[int]map[int]int)
-				}
-				if normal[y][x] == nil {
-					normal[y][x] = make(map[int]map[int]int)
-				}
-				//y = ax+b;==>
-				a = points[j][1]*(points[j][0]-points[i][0]) - points[j][0]*(points[j][1]-points[i][1])
-				b = points[j][0] - points[i][0]
-				if a == 0 {
-					b = 0
-				} else {
-					if a < 0 {
-						a = -a
-						b = -b
-					}
-					gcd = GCD(a, b)
-					a = a / gcd
-					b = b / gcd
-				}
-				if normal[y][x][a] == nil {
-					normal[y][x][a] = make(map[int]int)
-				}
-				normal[y][x][a][b] += 1
-				if r < normal[y][x][a][b] {
-					r = normal[y][x][a][b]
-				}
-				println(fmt.Sprintf("%+v, %+v ,%d,%d,%d,%d", points[i], points[j], x/y, a, b, r))
+			}
+			if _, ok := tmp[t]; !ok {
+				tmp[t] = make(map[int]map[int]map[int]int)
+			}
+			if _, ok := tmp[t][s]; !ok {
+				tmp[t][s] = make(map[int]map[int]int)
+			}
+			if _, ok := tmp[t][s][u]; !ok {
+				tmp[t][s][u] = make(map[int]int)
+			}
+			tmp[t][s][u][v] += 1
+			if lineMax < tmp[t][s][u][v] {
+				lineMax = tmp[t][s][u][v]
 			}
 		}
+		r = max(r, vertical+same+1)
+		r = max(r, horizontal+same+1)
+		r = max(r, lineMax+same+1)
 	}
-	//println(fmt.Sprintf("%+v, %+v, %+v", column, row, normal))
-	return r + 1
+
+	return r
 }
 
 func GCD(a int, b int) int {
@@ -109,5 +104,13 @@ func GCD(a int, b int) int {
 		return a
 	} else {
 		return GCD(b, a%b)
+	}
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
 	}
 }
