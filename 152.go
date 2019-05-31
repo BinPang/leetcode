@@ -1,18 +1,7 @@
 package main
 
-/**
-Input: [2,3,-2,4]
-Output: 6
-Explanation: [2,3] has the largest product 6.
-
-Input: [-2,0,-1]
-Output: 0
-Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
- */
-
 func main() {
 	println(maxProduct([]int{2, -5, -2, -4, 3}))
-	return
 	println(maxProduct([]int{3, -1, 4}))
 	println(maxProduct([]int{-2, 0, -1}))
 	println(maxProduct([]int{2, 3, -2, 4}))
@@ -22,16 +11,60 @@ func main() {
 }
 
 func maxProduct(nums []int) int {
-	r := nums[0]
 	l := len(nums)
-	max := r
-	min := r
+	if l == 0 {
+		return 0
+	}
+	r := nums[0]
+	preZero := false
+	if nums[0] == 0 {
+		preZero = true
+	}
+	maxPre := nums[0]
+	minPre := nums[0]
+	tmp := 0
 	for i := 1; i < l; i++ {
 		if nums[i] == 0 {
-			if max < 0 {
-				max = 0
+			if r < 0 {
+				r = 0
 			}
+			preZero = true
+		} else {
+			if preZero {
+				maxPre = nums[i]
+				minPre = nums[i]
+			} else {
+				if nums[i] > 0 {
+					maxPre = pmax(maxPre*nums[i], nums[i])
+					minPre = pmin(minPre*nums[i], nums[i])
+				} else {
+					tmp = pmax(minPre*nums[i], nums[i])
+					minPre = pmin(maxPre*nums[i], nums[i])
+					maxPre = tmp
+				}
+			}
+			preZero = false
+		}
+		if r < maxPre {
+			r = maxPre
 		}
 	}
+
 	return r
+}
+
+func pmax(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
+}
+
+func pmin(a, b int) int {
+	if a > b {
+		return b
+	} else {
+		return a
+	}
 }
