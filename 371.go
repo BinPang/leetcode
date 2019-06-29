@@ -1,33 +1,43 @@
 package main
 
-import "strconv"
-
 func main() {
-	println(strconv.FormatInt(10, 2))
-	println(strconv.FormatInt(-10, 2))
-
-	t := -5
-	println(t <<1)
-	println(t >>1)
-	println(t >>2)
-	println(t >>3)
-	println(t >>65)
+	println(getSum(-1, 2))
+	println(getSum(-1, 400000000))
+	println(getSum(1, 2))
+	println(getSum(0, 1))
+	println(getSum(0, -1))
+	println(getSum(-2, 3))
 }
+/*
+	101			101
+XOR			AND
+	110			110
+-------		-------
+	011			100 <<1 is carray
+
+// same with negative
+-1=>1111111111111111111111111111111111111111111111111111111111111111
+-2=>1111111111111111111111111111111111111111111111111111111111111110
+-3=>1111111111111111111111111111111111111111111111111111111111111101
+......
+
+suppose -1 + 2 == 1
+1111111111111111111111111111111111111111111111111111111111111111 xor 10 = 1111111111111111111111111111111111111111111111111111111111111101
+1111111111111111111111111111111111111111111111111111111111111111 and 10 = 10; 10 << 1 = 100
+
+1111111111111111111111111111111111111111111111111111111111111101 xor 100 = 1111111111111111111111111111111111111111111111111111111111111010
+1111111111111111111111111111111111111111111111111111111111111101 and 100 = 100; 100 << 1 = 1000
+......
+
+we can get -1 + 2 = 1
+*/
 
 func getSum(a int, b int) int {
-
-	return 0
+	var carry int
+	for b != 0 {
+		carry = a & b
+		a = a ^ b
+		b = carry << 1
+	}
+	return a
 }
-
-/*
-Calculate the sum of two integers a and b, but you are not allowed to use the operator + and -.
-
-Example 1:
-
-Input: a = 1, b = 2
-Output: 3
-Example 2:
-
-Input: a = -2, b = 3
-Output: 1
- */
