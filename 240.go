@@ -1,40 +1,37 @@
 package main
 
-/*
-Consider the following matrix:
-
-[
-  [1,   4,  7, 11, 15],
-  [2,   5,  8, 12, 19],
-  [3,   6,  9, 16, 22],
-  [10, 13, 14, 17, 24],
-  [18, 21, 23, 26, 30]
-]
-Given target = 5, return true.
-
-Given target = 20, return false.
-//find 15
-*/
-
-func searchMatrix(matrix [][]int, target int) bool {
-	if len(matrix) == 0 {
-		return false
+func main() {
+	t := [][]int{
+		{1, 4, 7, 11, 15},
+		{2, 5, 8, 12, 19},
+		{3, 6, 9, 16, 22},
+		{10, 13, 14, 17, 24},
+		{18, 21, 23, 26, 30},
 	}
-	return _searchMatrix(&matrix, target, 0, 0, len(matrix), len(matrix[0]))
+	println(searchMatrix(t, 0))
+	println(searchMatrix(t, 18))
+	println(searchMatrix(t, 20))
+	println(searchMatrix(t, 30))
+	println(searchMatrix(t, 31))
 }
 
-func _searchMatrix(matrix *[][]int, target int, startX, startY, endX, endY int) bool {
-	pointX := startX
-	pointY := startY
+func searchMatrix(matrix [][]int, target int) bool {
+	l := len(matrix)
+	if l == 0 {
+		return false
+	}
+	l1 := len(matrix[0])
+	startX, startY := 0, l1-1
 	for {
-		if (*matrix)[pointX][pointY] < target {
-			pointX++
-			pointY++
-		} else if (*matrix)[pointX][pointY] == target {
+		if startX == l || startY < 0 {
+			return false
+		}
+		if matrix[startX][startY] == target {
 			return true
+		} else if matrix[startX][startY] < target {
+			startX++
 		} else {
-			return _searchMatrix(matrix, target, pointX, 0, pointX-1, endY) ||
-				_searchMatrix(matrix, target, startX, pointY-1, pointX-1, endY)
+			startY--
 		}
 	}
 }
