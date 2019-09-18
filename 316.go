@@ -1,48 +1,36 @@
 package main
 
 func main() {
-	println(removeDuplicateLetters("bacb"))
-	println(removeDuplicateLetters("tsbacb"))
-	println(removeDuplicateLetters("bcabc"))
+	println(removeDuplicateLetters("bacb"))     //acb
+	println(removeDuplicateLetters("tsbacb"))   //tsacb
+	println(removeDuplicateLetters("bcabc"))    //abc
 	println(removeDuplicateLetters("cbacdcbc")) //acdb
 }
 
 func removeDuplicateLetters(s string) string {
-	l := len(s)
-	if l == 0 {
-		return ""
-	}
-	var i int
-	var j uint8
-	tmpR := make([]uint8, 0)
-	lastLocation := make([]int, 26)
-	for i = 0; i < 26; i++ {
-		lastLocation[i] = -1
-	}
-	i = 0
-	for i < l {
-		if lastLocation[s[i]-'a'] < 0 {
-			lastLocation[s[i]-'a'] = i
-			tmpR = append(tmpR, s[i])
-		} else {
-			for j = 'a'; j < s[i]; j++ {
-				if lastLocation[j-'a'] > lastLocation[s[i]-'a'] {
-					tmpR[lastLocation[s[i]-'a']] = '0'
-					lastLocation[s[i]-'a'] = i
-					tmpR = append(tmpR, s[i])
+	r := make([]byte, 0)
+	exist := make([]bool, 26)
+	for _, v := range s {
+		if exist[v-'a'] {
+			for kk, vv := range r {
+				if vv == byte(v) {
+					if r[kk+1] < r[kk] {
+						r = append(r, byte(v))
+						r[kk] = '0'
+					}
+					break
 				}
 			}
+		} else {
+			r = append(r, byte(v))
+			exist[v-'a'] = true
 		}
-		i++
-	}
-	r := make([]uint8, 0)
-	for _, v := range tmpR {
-		if v != '0' {
-			r = append(r, v)
-		}
-	}
 
-	return string(r)
+		//println(string(v), string(r))
+	}
+	println(string(r))
+	return ""
+
 }
 
 /*
