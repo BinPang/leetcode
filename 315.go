@@ -11,6 +11,11 @@ func main() {
 
 func countSmaller(nums []int) []int {
 	l := len(nums)
+	if l == 0 {
+		return nil
+	} else if l == 1 {
+		return []int{0}
+	}
 	n := make([]int, l)
 	s := make(map[int]int)
 	for e := range nums {
